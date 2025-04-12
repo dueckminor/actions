@@ -12,6 +12,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-      - uses: ./pr-add-checkbox
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: ./pr-add-checkbox
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
