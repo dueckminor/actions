@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "dist/index.js",
     "scripts": {
-        "build": "ncc build pr-add-checkbox/src/index.ts -o dist/pr-add-checkbox"
+        "build": "ncc build ./actions/pr-add-checkbox/src/index.ts -o dist/pr-add-checkbox"
     },
     "dependencies": {
         "@actions/core": "^1.10.0",
