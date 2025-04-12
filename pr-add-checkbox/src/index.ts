@@ -1,6 +1,23 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
+export function createBody(checkboxes: string): string {
+  let body = ``;
+  if (!checkboxes) {
+    return body;
+  }
+  for (const checkbox of checkboxes.split(",")) {
+    const parts = checkbox.split("=")
+    let label = parts[0].trim();
+    let name = label
+    if (parts.length == 2) {
+      name = parts[1].trim();
+    }
+    body += `- [ ] <!--${label}--> ${name}\n`;
+  }
+  return body;
+}
+
 async function run() {
   try {
     const token = core.getInput("github-token", { required: true });
@@ -21,16 +38,7 @@ async function run() {
       return;
     }
 
-    let body = `## Select which tests to run:\n`;
-    for (const checkbox in checkboxes.split(",")) {
-      const parts = checkbox.split("=")
-      let label = parts[0].trim();
-      let name = label
-      if (parts.length == 2) {
-        name = parts[1].trim();
-      }
-      body += `- [ ] <!--${label}--> (${name})\n`;
-    }
+    let body = `## Select which tests to run:\n`+createBody(checkboxes);
 
     await octokit.rest.issues.createComment({
       owner,

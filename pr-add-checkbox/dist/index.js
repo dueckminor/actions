@@ -32591,8 +32591,25 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createBody = createBody;
 const core = __importStar(__nccwpck_require__(7484));
 const github = __importStar(__nccwpck_require__(3228));
+function createBody(checkboxes) {
+    let body = ``;
+    if (!checkboxes) {
+        return body;
+    }
+    for (const checkbox of checkboxes.split(",")) {
+        const parts = checkbox.split("=");
+        let label = parts[0].trim();
+        let name = label;
+        if (parts.length == 2) {
+            name = parts[1].trim();
+        }
+        body += `- [ ] <!--${label}--> ${name}\n`;
+    }
+    return body;
+}
 async function run() {
     try {
         const token = core.getInput("github-token", { required: true });
@@ -32609,16 +32626,7 @@ async function run() {
             core.setFailed("Pull request number is undefined.");
             return;
         }
-        let body = `## Select which tests to run:\n`;
-        for (const checkbox in checkboxes.split(",")) {
-            const parts = checkbox.split("=");
-            let label = parts[0].trim();
-            let name = label;
-            if (parts.length == 2) {
-                name = parts[1].trim();
-            }
-            body += `- [ ] <!--${label}--> (${name})\n`;
-        }
+        let body = `## Select which tests to run:\n` + createBody(checkboxes);
         await octokit.rest.issues.createComment({
             owner,
             repo,
