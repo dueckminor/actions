@@ -8,4 +8,4 @@ inputs:
 
 runs:
   using: "node20"
-  main: "dist/pr-add-checkbox/index.js"
+  main: "dist/index.js"
