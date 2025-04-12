@@ -1,7 +1,7 @@
 name: "Add checkbox to PR"
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 
 permissions:
   pull-requests: write
@@ -12,10 +12,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-      - name: List files
-        run: |
-          pwd
-          find .
       - uses: ./pr-add-checkbox
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          checkboxes: "test-1=Test 1 description, test-2=Test 2 description"
