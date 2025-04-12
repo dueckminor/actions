@@ -10,6 +10,12 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - name: List files
+        run: |
+          pwd
+          find .
       - uses: ./pr-add-checkbox
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
