@@ -38,14 +38,35 @@ async function run() {
       return;
     }
 
-    let body = `## Select which tests to run:\n`+createBody(checkboxes);
+    let body = `<!-- pr-add-checkbox -->\n`;
+    body += `## Select which tests to run:\n`
+    body += createBody(checkboxes);
 
-    await octokit.rest.issues.createComment({
+    const comments = await octokit.rest.issues.listComments({
+      owner,
+      repo,
+      issue_number,
+    });
+
+    const existingComment = comments.data.find(comment =>
+      comment.body?.startsWith("<!-- pr-add-checkbox -->")
+    );
+
+    if (existingComment) {
+      await octokit.rest.issues.updateComment({
+      owner,
+      repo,
+      comment_id: existingComment.id,
+      body,
+      });
+    } else {
+      await octokit.rest.issues.createComment({
       owner,
       repo,
       issue_number,
       body,
-    });
+      });
+    }
 
     core.info("Comment with checkboxes posted.");
   } catch (error: any) {
