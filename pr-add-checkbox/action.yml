@@ -5,7 +5,9 @@ inputs:
   github-token:
     description: "GitHub token"
     required: true
-
+  checkboxes:
+    description: "List of checkboxes with name and label"
+    required: true
 runs:
   using: "node20"
   main: "dist/index.js"

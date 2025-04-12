@@ -4,6 +4,7 @@ import * as github from "@actions/github";
 async function run() {
   try {
     const token = core.getInput("github-token", { required: true });
+    const checkboxes: { name: string; label: string }[] = JSON.parse(core.getInput("checkboxes", { required: true }));
     const octokit = github.getOctokit(token);
     const context = github.context;
 
@@ -20,11 +21,10 @@ async function run() {
       return;
     }
 
-    const body = `
-## Select which tests to run
-- [ ] Run expensive integration tests
-- [ ] Run UI regression tests
-`;
+    let body = `## Select which tests to run:\n`;
+    for (const checkbox of checkboxes) {
+      body += `- [ ] <!--${checkbox.label}--> (${checkbox.name})\n`;
+    }
 
     await octokit.rest.issues.createComment({
       owner,

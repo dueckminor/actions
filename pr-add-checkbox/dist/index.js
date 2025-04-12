@@ -32596,6 +32596,7 @@ const github = __importStar(__nccwpck_require__(3228));
 async function run() {
     try {
         const token = core.getInput("github-token", { required: true });
+        const checkboxes = JSON.parse(core.getInput("checkboxes", { required: true }));
         const octokit = github.getOctokit(token);
         const context = github.context;
         if (context.eventName !== "pull_request") {
@@ -32608,11 +32609,10 @@ async function run() {
             core.setFailed("Pull request number is undefined.");
             return;
         }
-        const body = `
-## Select which tests to run
-- [ ] Run expensive integration tests
-- [ ] Run UI regression tests
-`;
+        let body = `## Select which tests to run:\n`;
+        for (const checkbox of checkboxes) {
+            body += `- [ ] <!--${checkbox.label}--> (${checkbox.name})\n`;
+        }
         await octokit.rest.issues.createComment({
             owner,
             repo,
