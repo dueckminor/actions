@@ -32596,7 +32596,7 @@ const github = __importStar(__nccwpck_require__(3228));
 async function run() {
     try {
         const token = core.getInput("github-token", { required: true });
-        const checkboxes = JSON.parse(core.getInput("checkboxes", { required: true }));
+        const checkboxes = core.getInput("checkboxes", { required: true });
         const octokit = github.getOctokit(token);
         const context = github.context;
         if (context.eventName !== "pull_request") {
@@ -32610,8 +32610,14 @@ async function run() {
             return;
         }
         let body = `## Select which tests to run:\n`;
-        for (const checkbox of checkboxes) {
-            body += `- [ ] <!--${checkbox.label}--> (${checkbox.name})\n`;
+        for (const checkbox in checkboxes.split(",")) {
+            const parts = checkbox.split("=");
+            let label = parts[0].trim();
+            let name = label;
+            if (parts.length == 2) {
+                name = parts[1].trim();
+            }
+            body += `- [ ] <!--${label}--> (${name})\n`;
         }
         await octokit.rest.issues.createComment({
             owner,

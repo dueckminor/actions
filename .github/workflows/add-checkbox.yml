@@ -19,8 +19,4 @@ jobs:
       - uses: ./pr-add-checkbox
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          checkboxes: |
-            - name: "Test 1"
-              label: "test-1"
-            - name: "Test 2"
-              label: "test-2"
+          checkboxes: "test-1=Test 1 description, test-2=Test 2 description"

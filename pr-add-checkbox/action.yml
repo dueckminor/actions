@@ -6,7 +6,10 @@ inputs:
     description: "GitHub token"
     required: true
   checkboxes:
-    description: "List of checkboxes with name and label"
+    description: |
+      Comma separated list of checkboxes.
+      Simple example: "Test1, Test2"
+      Advanced example: "Test1=Test #1 description, Test2=Test #2 description"
     required: true
 runs:
   using: "node20"
