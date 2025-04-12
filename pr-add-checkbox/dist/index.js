@@ -32626,13 +32626,31 @@ async function run() {
             core.setFailed("Pull request number is undefined.");
             return;
         }
-        let body = `## Select which tests to run:\n` + createBody(checkboxes);
-        await octokit.rest.issues.createComment({
+        let body = `<!-- pr-add-checkbox -->\n`;
+        body += `## Select which tests to run:\n`;
+        body += createBody(checkboxes);
+        const comments = await octokit.rest.issues.listComments({
             owner,
             repo,
             issue_number,
-            body,
         });
+        const existingComment = comments.data.find(comment => comment.body?.startsWith("<!-- pr-add-checkbox -->"));
+        if (existingComment) {
+            await octokit.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existingComment.id,
+                body,
+            });
+        }
+        else {
+            await octokit.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body,
+            });
+        }
         core.info("Comment with checkboxes posted.");
     }
     catch (error) {
