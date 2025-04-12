@@ -41,6 +41,7 @@ async function run() {
     let body = `<!-- pr-add-checkbox -->\n`;
     body += `## Select which tests to run:\n`
     body += createBody(checkboxes);
+    body += `\n\n[Re-run this action](# "Re-run this action by re-triggering the workflow.")\n`;
 
     const comments = await octokit.rest.issues.listComments({
       owner,
